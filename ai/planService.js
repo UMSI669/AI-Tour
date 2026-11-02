@@ -1,11 +1,14 @@
 // PART 2 — Uncomment these imports when you enable the request implementation.
-// import { generateText } from 'ai';
-// import { createAIProvider } from './client';
-// import { getAIConfig } from './config';
+import { generateText } from 'ai';
+import { createAIProvider } from './client';
+import { getAIConfig } from './config';
 
 export async function generateFocusPlan({ goal, availableMinutes }) {
-  if (!goal || !goal.trim()) {
+  if (typeof goal !== 'string' || !goal.trim()) {
     throw new Error('Add a study goal before making a plan.');
+  }
+  if (!Number.isInteger(availableMinutes) || availableMinutes < 2) {
+    throw new Error('Choose at least 2 whole minutes for your study session.');
   }
 
   // ======================================================
@@ -19,7 +22,7 @@ export async function generateFocusPlan({ goal, availableMinutes }) {
   // VERIFY: Mock generateText and confirm the goal and time appear in the prompt.
   // NEXT: Search for "PART 3 — VALIDATE STRUCTURED OUTPUT" below.
   // ======================================================
-  /* PART 2 — Remove this block's opening and closing comment markers:
+  ///PART 2 — Remove this block's opening and closing comment markers:
   const { model } = getAIConfig();
   const provider = createAIProvider();
   const { text } = await generateText({
@@ -29,10 +32,7 @@ export async function generateFocusPlan({ goal, availableMinutes }) {
       openai: { maxCompletionTokens: 450 },
     },
   });
-  return text;
-  */
-
-  throw new Error('PART 2 is not enabled yet. Connect the planner to the AI service.');
+  return parseFocusPlan(text, availableMinutes);
 }
 
 // ======================================================
@@ -47,7 +47,6 @@ export async function generateFocusPlan({ goal, availableMinutes }) {
 // VERIFY: Valid JSON becomes a plan; missing fields and invalid step times fail.
 // NEXT: Search for "PART 4 — MAKE THE RESULT AN APP FEATURE" in App.js.
 // ======================================================
-/*
 export function parseFocusPlan(text, availableMinutes) {
   let value;
   try {
@@ -60,12 +59,14 @@ export function parseFocusPlan(text, availableMinutes) {
   const steps = value && value.steps;
   if (
     !value
+    || !Number.isInteger(availableMinutes)
+    || availableMinutes < 2
     || !validText(value.title)
     || !validText(value.summary)
     || !Array.isArray(steps)
     || steps.length < 2
     || steps.length > 5
-    || steps.some(step => !validText(step.title) || !Number.isInteger(step.minutes) || step.minutes < 1)
+    || steps.some(step => !step || !validText(step.title) || !Number.isInteger(step.minutes) || step.minutes < 1)
     || steps.reduce((total, step) => total + step.minutes, 0) > availableMinutes
   ) {
     throw new Error('The AI response did not match the focus plan format. Try again.');
@@ -77,13 +78,10 @@ export function parseFocusPlan(text, availableMinutes) {
     steps: steps.map(step => ({ title: step.title.trim(), minutes: step.minutes })),
   };
 }
-*/
+
 
 export function getPlanPrompt({ goal, availableMinutes }) {
   return `Create a short study focus plan. Return only a JSON object with this exact shape: {"title":"...","summary":"...","steps":[{"title":"...","minutes":10}]}. Include 2 to 5 actionable steps. The step minutes must be positive whole numbers and add up to no more than ${availableMinutes}. Goal: ${goal.trim()}. Available time: ${availableMinutes} minutes.`;
 }
 
-// PART 3 — Replace this TODO stub with the parser shown above.
-export function parseFocusPlan() {
-  throw new Error('PART 3 is not enabled yet. Validate the model response before showing it.');
-}
+

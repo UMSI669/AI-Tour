@@ -78,3 +78,16 @@ test('PART 3 missing: prompt explains the requested response format and time bud
   expect(prompt).toContain('Return only a JSON object');
   expect(prompt).toContain('add up to no more than 25');
 });
+
+test('rejects invalid time budgets before calling the provider', async () => {
+  for (const availableMinutes of [undefined, NaN, 0, -1, 2.5, '25']) {
+    await expect(generateFocusPlan({ goal: 'Study', availableMinutes })).rejects.toThrow('whole minutes');
+  }
+  expect(generateText).not.toHaveBeenCalled();
+});
+
+test('rejects null steps with a recoverable format error', () => {
+  expect(() => parseFocusPlan(JSON.stringify({
+    title: 'Study', summary: 'Review notes', steps: [null, { title: 'Recall', minutes: 5 }],
+  }), 25)).toThrow('focus plan format');
+});

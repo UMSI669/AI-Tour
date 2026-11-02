@@ -20,6 +20,7 @@ const focusPlan = {
 };
 
 beforeEach(() => {
+  jest.clearAllMocks();
   generateFocusPlan.mockResolvedValue(focusPlan);
 });
 
@@ -63,7 +64,8 @@ test('PART 5 missing: duplicate submissions are disabled during generation', asy
 test('PART 4 missing: learner can check a step and see completion progress', async () => {
   const screen = render(<App />);
   fireEvent.press(screen.getByRole('button', { name: 'Generate focus plan' }));
-  const checkbox = await screen.findByRole('checkbox', { name: 'Mark complete' });
+  await screen.findByText('Cell biology review');
+  const checkbox = screen.getAllByRole('checkbox', { name: 'Mark complete' })[0];
 
   expect(screen.getByText('0 of 2 steps complete')).toBeTruthy();
   fireEvent.press(checkbox);
