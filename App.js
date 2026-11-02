@@ -11,7 +11,7 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // PART 2 — Uncomment this import when you enable the AI request below.
-// import { generateFocusPlan } from './ai/planService';
+import { generateFocusPlan } from './ai/planService';
 
 const SAMPLE_PLAN = {
   title: 'A steady start',
@@ -32,12 +32,12 @@ export default function App() {
   // PART 3 — Replace the static preview above with: const [plan, setPlan] = React.useState(SAMPLE_PLAN);
   const [error, setError] = React.useState('');
   // PART 2 — Add this state when you enable the raw model reply preview below.
-  // const [aiReply, setAIReply] = React.useState('');
+  const [aiReply, setAIReply] = React.useState('');
   // PART 5 — Add request state when you enable the loading/error block below:
-  // const [isGenerating, setIsGenerating] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(false);
   // PART 4 — Add completion state when you enable the checkboxes below:
-  // const [completedSteps, setCompletedSteps] = React.useState({});
-  // const completedCount = Object.values(completedSteps).filter(Boolean).length;
+  const [completedSteps, setCompletedSteps] = React.useState({});
+  const completedCount = Object.values(completedSteps).filter(Boolean).length;
 
   // ======================================================
   // PART 2 — SEND A CONTEXTUAL REQUEST
@@ -56,12 +56,10 @@ export default function App() {
   // ======================================================
   async function createPlan() {
     setError('Enable PART 2 in App.js and ai/planService.js to generate a plan.');
-    /* PART 2 — Replace the starter line above with this request:
+    // PART 2 — Replace the starter line above with this request:
     const text = await generateFocusPlan({ goal, availableMinutes });
     setAIReply(text);
-    */
-
-    /* PART 5 — Replace the whole starter body with this request lifecycle:
+    //  PART 5 — Replace the whole starter body with this request lifecycle:
     setIsGenerating(true);
     setError('');
     try {
@@ -73,7 +71,6 @@ export default function App() {
     } finally {
       setIsGenerating(false);
     }
-    */
   }
 
   // ======================================================
@@ -104,11 +101,11 @@ export default function App() {
   // NEXT: Search for "PART 5 — HANDLE REQUEST STATES" below.
   // ======================================================
   // PART 4 — Uncomment this function after adding the completion state above.
-  /*
+  
   function toggleStep(index) {
     setCompletedSteps(current => ({ ...current, [index]: !current[index] }));
   }
-  */
+  
 
   return (
     <SafeAreaProvider>
@@ -167,7 +164,7 @@ export default function App() {
             */}
             <Pressable
               accessibilityRole="button"
-              disabled
+              //disabled
               onPress={createPlan}
               style={[styles.primaryButton, styles.disabledButton]}
             >
@@ -199,22 +196,20 @@ export default function App() {
                 </View>
                 <Text style={styles.stepTitle}>{step.title}</Text>
                 {/* PART 4 — Uncomment this Pressable to enable checklist actions. */}
-                {/*
-                <Pressable
+                {<Pressable
                   accessibilityRole="checkbox"
                   accessibilityState={{ checked: Boolean(completedSteps[index]) }}
                   onPress={() => toggleStep(index)}
                   style={styles.checkButton}
                 >
                   <Text style={styles.checkText}>{completedSteps[index] ? 'Done' : 'Mark complete'}</Text>
-                </Pressable>
-                */}
+                </Pressable>}
               </View>
             ))}
           </View>
 
           {/* PART 4 — Uncomment this line after adding completion state above. */}
-          {/* <Text style={styles.progress}>{completedCount} of {plan.steps.length} steps complete</Text> */}
+          <Text style={styles.progress}>{completedCount} of {plan.steps.length} steps complete</Text>
 
           <Text style={styles.footer}>
             The AI suggests a plan. You decide what to do with it.
