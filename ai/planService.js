@@ -83,6 +83,5 @@ export function getPlanPrompt({ goal, availableMinutes }) {
 }
 
 // PART 3 — Replace this TODO stub with the parser shown above.
-// export function parseFocusPlan() {
-//   throw new Error('PART 3 is not enabled yet. Validate the model response before showing it.');
-// }
+export function parseFocusPlan() {
+  throw new Error('PART 3 is not enabled yet. Validate the model response before showing it.'); }
