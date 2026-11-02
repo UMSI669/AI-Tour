@@ -22,9 +22,4 @@ export function createAIProvider() {
     apiKey,
     baseURL,
   });
-  // */
-
-  throw new Error(
-    "PART 2 is not enabled yet. Configure the OpenAI-compatible provider.",
-  );
 }

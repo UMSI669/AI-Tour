@@ -29,12 +29,7 @@ export async function generateFocusPlan({ goal, availableMinutes }) {
       openai: { maxCompletionTokens: 450 },
     },
   });
-  return text;
-  //*/
-
-  throw new Error(
-    "PART 2 is not enabled yet. Connect the planner to the AI service.",
-  );
+  return parseFocusPlan(text, availableMinutes);
 }
 
 // ======================================================
@@ -53,7 +48,6 @@ export function parseFocusPlan(text, availableMinutes) {
   let value;
   try {
     value = JSON.parse(text);
-    console.log(value); // DEBUG
   } catch {
     throw new Error("The AI response was not valid JSON. Try again.");
   }
@@ -70,6 +64,7 @@ export function parseFocusPlan(text, availableMinutes) {
     steps.length > 5 ||
     steps.some(
       (step) =>
+        !step ||
         !validText(step.title) ||
         !Number.isInteger(step.minutes) ||
         step.minutes < 1,

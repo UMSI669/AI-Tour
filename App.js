@@ -37,7 +37,7 @@ export default function App() {
   // PART 3 — Replace the static preview above with: const [plan, setPlan] = React.useState(SAMPLE_PLAN);
   const [error, setError] = React.useState("");
   // PART 2 — Add this state when you enable the raw model reply preview below.
-  const [aiReply, setAIReply] = React.useState("");
+  // const [aiReply, setAIReply] = React.useState("");
   // PART 5 — Add request state when you enable the loading/error block below:
   const [isGenerating, setIsGenerating] = React.useState(false);
   // PART 4 — Add completion state when you enable the checkboxes below:
@@ -72,8 +72,7 @@ export default function App() {
     setIsGenerating(true);
     setError("");
     try {
-      // const nextPlan = await generateFocusPlan({ goal, availableMinutes });
-      const nextPlan = SAMPLE_PLAN;
+      const nextPlan = await generateFocusPlan({ goal, availableMinutes });
       setPlan(nextPlan);
       //setAIReply(nextPlan);
       setCompletedSteps({});
@@ -195,11 +194,13 @@ export default function App() {
             */}
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={isGenerating ? "Making your plan…" : "Generate focus plan"}
+              disabled={isGenerating}
               onPress={createPlan}
-              style={[styles.primaryButton, styles.disabledButton]}
+              style={[styles.primaryButton, isGenerating && styles.disabledButton]}
             >
               <Text style={styles.primaryButtonText}>
-                Generate a plan · enable Part 2
+                {isGenerating ? "Making your plan…" : "Generate a plan"}
               </Text>
             </Pressable>
             {error ? (
@@ -210,11 +211,13 @@ export default function App() {
           </View>
 
           {/* PART 2 — Uncomment this preview after adding the aiReply state. */}
+          {/*
           {aiReply ? (
             <Text accessibilityRole="text" style={styles.rawReply}>
               {aiReply}
             </Text>
           ) : null}
+          */}
 
           <View style={styles.planHeader}>
             <View style={styles.planHeadingGroup}>

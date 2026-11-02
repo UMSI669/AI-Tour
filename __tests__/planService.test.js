@@ -63,6 +63,21 @@ test('PART 2 missing: rejects blank goals before making a provider request', asy
   expect(generateText).not.toHaveBeenCalled();
 });
 
+test.each([
+  'not json',
+  JSON.stringify({ title: 'Only a title', summary: 'Missing steps.' }),
+  JSON.stringify({
+    title: 'Invalid steps',
+    summary: 'One step is null.',
+    steps: [null, { title: 'Review', minutes: 5 }],
+  }),
+])('rejects malformed model output before it reaches the app: %s', async text => {
+  generateText.mockResolvedValueOnce({ text });
+
+  await expect(generateFocusPlan({ goal: 'Review ecosystems', availableMinutes: 25 }))
+    .rejects.toThrow(/The AI response/);
+});
+
 test('PART 3 missing: validates model JSON shape and total step time', () => {
   expect(() => parseFocusPlan('not json', 25)).toThrow('not valid JSON');
   expect(() => parseFocusPlan(JSON.stringify({ title: 'Only a title' }), 25)).toThrow('focus plan format');
