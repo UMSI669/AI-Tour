@@ -4,6 +4,9 @@ import App from '../../App';
 import { getAIConfig } from '../../ai/config';
 import { getPlanPrompt } from '../../ai/planService';
 
+jest.mock('ai', () => ({ generateText: jest.fn() }));
+jest.mock('../../ai/client', () => ({ createAIProvider: jest.fn() }));
+
 jest.mock('../../ai/planService', () => ({
   generateFocusPlan: jest.fn(),
   getPlanPrompt: jest.requireActual('../../ai/planService').getPlanPrompt,
